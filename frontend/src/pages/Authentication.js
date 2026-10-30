@@ -13,7 +13,7 @@ export async function action({request}) {
   const mode = searchParams.get('mode') || 'login';
 
   if (mode !== 'login' && mode !== 'signup') {
-    throw new Response({ message: 'Unsupported mode.' }, { status: 422 });
+    throw new Response(JSON.stringify({ message: 'Unsupported mode.' }), { status: 422 });
   }
 
 
@@ -22,22 +22,24 @@ export async function action({request}) {
     email: data.get('email'),
     password: data.get('password')
   };
- const response = await  fetch('http://localhost:8080/' + mode, {
-    method: 'POST',
-    body: JSON.stringify(authData),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
+const response = await fetch('http://localhost:8080/' + mode, {
+  method: 'POST',
+  body: JSON.stringify(authData),
+  headers: { 'Content-Type': 'application/json' },
+});
 
-  if(response.status === 422 || response.status === 401) {
-    return response;
-  }
+const responseData = await response.json();
 
-  if(!response.ok) {
-    throw new Response('Could not authenticate user.', { status: 500 });
-  }
+if (response.status === 401 || response.status === 422) {
+  return responseData;
+}
 
-  return redirect('/');
+if (!response.ok) {
+  throw new Response(
+    JSON.stringify({ message: 'Could not authenticate user.' }),
+    { status: 500 }
+  );
+}
 
+return redirect('/');
 }

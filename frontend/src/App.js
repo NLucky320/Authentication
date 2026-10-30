@@ -22,12 +22,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <HomePage /> },
-      {
-        path: '/auth',
-        element: <AuthenticationPage />,
-        action: AuthAction
-
-      },
+   
       {
         path: 'events',
         element: <EventsRootLayout />,
@@ -60,6 +55,12 @@ const router = createBrowserRouter([
             action: manipulateEventAction,
           },
         ],
+      },
+         {
+        path: '/auth',
+        element: <AuthenticationPage />,
+        action: AuthAction
+
       },
       {
         path: 'newsletter',
