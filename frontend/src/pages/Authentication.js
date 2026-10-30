@@ -28,10 +28,11 @@ const response = await fetch('http://localhost:8080/' + mode, {
   headers: { 'Content-Type': 'application/json' },
 });
 
-const responseData = await response.json();
+const resData = await response.json();
+const token = resData.token
 
 if (response.status === 401 || response.status === 422) {
-  return responseData;
+  return resData;
 }
 
 if (!response.ok) {
@@ -40,6 +41,9 @@ if (!response.ok) {
     { status: 500 }
   );
 }
+
+localStorage.setItem('token', token);
+
 
 return redirect('/');
 }
